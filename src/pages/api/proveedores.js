@@ -4,7 +4,7 @@ import clientPromise from '@/lib/mongodb';
 export default async function handler(req, res) {
   try {
     const client = await clientPromise;
-    const db = client.db('baseprueba');
+    const db = client.db('test');
     const collection = db.collection('proveedores');
 
     // GET - Obtener todos los proveedores

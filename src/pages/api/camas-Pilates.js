@@ -10,7 +10,7 @@ export default async function handler(req, res) {
 
   try {
     const client = await clientPromise;
-    const db = client.db('baseprueba');
+    const db = client.db('test');
     
     if (req.method === 'GET') {
       const result = await db.collection('camasPilates').findOne({ tipo: 'asignacionesCamas' });

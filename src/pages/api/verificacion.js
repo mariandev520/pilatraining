@@ -5,7 +5,7 @@ import { ObjectId } from 'mongodb';
 export default async function handler(req, res) {
   try {
     const client = await clientPromise;
-    const db = client.db('baseprueba');
+    const db = client.db('test');
     const colVerificacion = db.collection('verificacion');
     const colClientes = db.collection('clientes');
     const colInfoClases = db.collection('infoclases');

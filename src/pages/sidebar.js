@@ -171,28 +171,18 @@ const LogoContainer = styled(Box)(({ theme }) => ({
 const menuItems = [
   { path: '/Dashboard', icon: <DashboardIcon fontSize="small"/>, label: 'Panel' },
   { path: '/clientes', icon: <PeopleIcon fontSize="small"/>, label: 'Clientes' },
- 
   {
-    path: '/actividades', // Path padre
+    path: '/actividades',
     icon: <FitnessCenterIcon fontSize="small"/>,
     label: 'Menu Actividades',
     subItems: [
-      { path: '/camaspilates', icon: <SportsGymnasticsIcon fontSize="small"/>, label: 'Pilates' },
-      { path: '/yoga', icon: <SportsGymnasticsIcon fontSize="small"/>, label: 'Yoga' },
-      { path: '/stretching', icon: <SportsGymnasticsIcon fontSize="small"/>, label: 'Stretching' },
-      { path: '/jumping', icon: <SportsGymnasticsIcon fontSize="small"/>, label: 'Jumping ' },
-      { path: '/funcional', icon: <SportsGymnasticsIcon fontSize="small"/>, label: 'Funcional' },
-      { path: '/boxeo', icon: <SportsGymnasticsIcon fontSize="small"/>, label: 'Boxeo' },
-      { path: '/gap', icon: <SportsGymnasticsIcon fontSize="small"/>, label: 'Gap' },
-      { path: '/jiujutsu', icon: <SportsGymnasticsIcon fontSize="small"/>, label: 'Jiujutsu' },
-      { path: '/kickboxing', icon: <SportsGymnasticsIcon fontSize="small"/>, label: 'Kick Boxing' }
-     
+      { path: '/camaspilates', icon: <SportsGymnasticsIcon fontSize="small"/>, label: 'Pilates' }
     ]
   },
   { path: '/menuactividades', icon: <PeopleIcon fontSize="small"/>, label: 'Actividades' },
   { path: '/profesor', icon: <PersonIcon fontSize="small"/>, label: 'Profesores' },
   { path: '/RegistroPagos', icon: <PaymentIcon fontSize="small"/>, label: 'Pagos' },
-   { path: '/calendario', icon: <PaymentIcon fontSize="small"/>, label: 'Proveedores' },
+  { path: '/calendario', icon: <PaymentIcon fontSize="small"/>, label: 'Proveedores' },
   { path: '/infoclases', icon: <ClassIcon fontSize="small"/>, label: 'Clases' },
   { path: '/verificaciondiaria', icon: <VerifiedUserIcon fontSize="small"/>, label: 'Clases Verificadas' },
 ];

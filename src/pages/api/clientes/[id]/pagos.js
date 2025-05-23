@@ -17,7 +17,7 @@ const UPLOAD_ENDPOINT = `${SERVER_URL}/drive/upload.php`;
 export default async function handler(req, res) {
   try {
     const client = await clientPromise;
-    const db = client.db('baseprueba');
+    const db = client.db('test');
     const clientesCollection = db.collection('clientes');
     const infoclasesCollection = db.collection('infoclases');
     const { id } = req.query;

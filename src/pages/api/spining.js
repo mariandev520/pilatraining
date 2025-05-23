@@ -3,7 +3,7 @@ import clientPromise from '@/lib/mongodb';
 export default async function handler(req, res) {
   try {
     const client = await clientPromise;
-    const db = client.db('baseprueba');
+    const db = client.db('test');
     const colSpinning = db.collection('spinning');
     
     // Método GET: Obtener asignaciones de espacios de spinning

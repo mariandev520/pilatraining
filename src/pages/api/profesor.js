@@ -4,7 +4,7 @@ import { ObjectId } from 'mongodb';
 export default async function handler(req, res) {
   try {
     const client = await clientPromise;
-    const db = client.db(process.env.MONGODB_DB || 'baseprueba');
+    const db = client.db(process.env.MONGODB_DB || 'test');
     const profesoresCollection = db.collection('profesor');
     const asistenciaCollection = db.collection('asistencia');
 

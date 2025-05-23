@@ -3,7 +3,7 @@ import { ObjectId } from 'mongodb';
 
 export default async function handler(req, res) {
   const client = await clientPromise;
-  const db = client.db('baseprueba'); // Asegúrate que sea tu base de datos
+  const db = client.db('test'); // Asegúrate que sea tu base de datos
   const col = db.collection('infoclases');
   const { method } = req;
 
