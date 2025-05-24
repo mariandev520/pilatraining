@@ -1,18 +1,18 @@
-import React, { useState, useEffect } from 'react';
-import { 
+import React, { useState, useEffect, useMemo } from 'react';
+import {
     Container, Typography, Paper, Box, Grid, Avatar,
     Chip, Card, CardContent, CircularProgress, Alert,
     Divider, IconButton, Button, List, ListItem, ListItemAvatar,
-    ListItemText, Tab, Tabs, Snackbar, alpha, Tooltip, Zoom, Fade
+    ListItemText, Tab, Tabs, Snackbar, alpha, Tooltip, Zoom, Fade, Slide, ButtonBase
 } from '@mui/material';
-import { 
+import {
     Person as PersonIcon,
     Delete as DeleteIcon,
     Save as SaveIcon,
     FitnessCenter as FitnessCenterIcon,
     CheckCircle as CheckCircleIcon,
     ArrowRightAlt as ArrowRightAltIcon,
-    Today as TodayIcon,
+    // Today as TodayIcon, // Not used
     ErrorOutline as ErrorOutlineIcon,
     Bed as BedIcon,
     Info as InfoIcon,
@@ -20,7 +20,7 @@ import {
     Schedule as ScheduleIcon,
     Event as EventIcon
 } from '@mui/icons-material';
-import { keyframes } from '@emotion/react';
+import { keyframes, useTheme } from '@emotion/react'; // Added useTheme for breakpoints
 
 // Animaciones personalizadas
 const pulse = keyframes`
@@ -38,7 +38,7 @@ const fadeIn = keyframes`
 const DIAS_SEMANA = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'];
 const HORARIOS = ['8:00', '9:30', '11:00', '16:00', '17:30', '19:00'];
 
-// Paleta de colores mejorada
+// Paleta de colores mejorada (using your COLORS object)
 const COLORS = {
     primary: '#5D5FEF',
     secondary: '#6C63FF',
@@ -52,19 +52,19 @@ const COLORS = {
     lightGray: '#EDF2F7'
 };
 
-// Componente CamaIndividual con mejoras visuales
+// Componente CamaIndividual con mejoras visuales y responsiveness
 const CamaIndividual = ({ numero, cliente, onClickCama, onRemoveCliente }) => {
     return (
         <Zoom in={true} style={{ transitionDelay: `${numero * 50}ms` }}>
             <Card
                 elevation={cliente ? 3 : 1}
                 sx={{
-                    height: '160px',
+                    height: '160px', // Maintained height
                     display: 'flex',
                     flexDirection: 'column',
                     borderRadius: '12px',
                     position: 'relative',
-                    overflow: 'visible',
+                    overflow: 'visible', // Kept for the number badge
                     border: cliente ? `2px solid ${cliente.color || COLORS.primary}` : `2px dashed ${COLORS.lightGray}`,
                     bgcolor: cliente ? alpha(cliente.color || COLORS.primary, 0.08) : '#ffffff',
                     transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
@@ -72,24 +72,25 @@ const CamaIndividual = ({ numero, cliente, onClickCama, onRemoveCliente }) => {
                         boxShadow: 6,
                         transform: 'translateY(-2px)',
                         borderColor: cliente ? alpha(cliente.color || COLORS.primary, 0.8) : COLORS.secondary,
-                    }
+                    },
+                    // Responsive adjustments for inner content might be needed if text overflows badly
                 }}
             >
                 <Box
                     sx={{
-                        position: 'absolute', 
-                        top: -15, 
+                        position: 'absolute',
+                        top: -15,
                         left: 15,
                         backgroundColor: cliente ? (cliente.color || COLORS.primary) : COLORS.textSecondary,
-                        color: '#fff', 
-                        width: 32, 
+                        color: '#fff',
+                        width: 32,
                         height: 32,
-                        borderRadius: '50%', 
-                        display: 'flex', 
+                        borderRadius: '50%',
+                        display: 'flex',
                         alignItems: 'center',
-                        justifyContent: 'center', 
+                        justifyContent: 'center',
                         boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
-                        fontWeight: 'bold', 
+                        fontWeight: 'bold',
                         zIndex: 1,
                         transition: 'all 0.3s ease'
                     }}
@@ -97,64 +98,69 @@ const CamaIndividual = ({ numero, cliente, onClickCama, onRemoveCliente }) => {
                     {numero}
                 </Box>
 
-                <CardContent sx={{
-                    flex: 1, 
-                    display: 'flex', 
-                    flexDirection: 'column',
-                    alignItems: 'center', 
-                    justifyContent: 'center',
-                    padding: '28px 10px 8px',
-                    cursor: 'pointer'
-                }} onClick={onClickCama}>
+                {/* Added ButtonBase for ripple effect on the main clickable area */}
+                <ButtonBase
+                    component="div" // Use div to avoid button-in-button issues if Card is ever a button
+                    onClick={onClickCama}
+                    sx={{
+                        flex: 1,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        padding: { xs: '28px 8px 8px', sm: '28px 10px 8px' }, // Slightly less horizontal padding on xs
+                        width: '100%',
+                        borderRadius: 'inherit', // Inherit border radius from Card
+                    }}
+                >
                     {cliente ? (
                         <Fade in={true}>
-                            <Box sx={{ 
-                                display: 'flex', 
-                                flexDirection: 'column', 
+                            <Box sx={{
+                                display: 'flex',
+                                flexDirection: 'column',
                                 alignItems: 'center',
-                                animation: `${fadeIn} 0.5s ease-out`
+                                animation: `${fadeIn} 0.5s ease-out`,
+                                textAlign: 'center', // Ensure text is centered
+                                width: '100%' // Ensure box takes full width for text centering
                             }}>
                                 <Avatar
                                     sx={{
-                                        width: 48, 
-                                        height: 48,
-                                        bgcolor: cliente.color || COLORS.primary, 
+                                        width: { xs: 40, sm: 48 }, // Responsive avatar
+                                        height: { xs: 40, sm: 48 },
+                                        bgcolor: cliente.color || COLORS.primary,
                                         mb: 1,
                                         boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
-                                        fontSize: '1rem',
-                                        '&:hover': {
+                                        fontSize: { xs: '0.9rem', sm: '1rem' }, // Responsive font size for initials
+                                        '&:hover': { // Pulse animation on hover (less relevant for tap)
                                             animation: `${pulse} 1s ease infinite`
                                         }
                                     }}
                                 >
-                                    {cliente.nombre?.split(' ').map(n=>n[0]).join('')}
+                                    {cliente.nombre?.split(' ').map(n => n[0]).join('')}
                                 </Avatar>
-                                <Typography 
-                                    variant="body2" 
-                                    fontWeight="600" 
-                                    align="center" 
-                                    sx={{ 
-                                        mb: 0, 
-                                        width: '100%', 
-                                        overflow: 'hidden', 
-                                        textOverflow: 'ellipsis', 
-                                        whiteSpace: 'nowrap',
-                                        color: COLORS.textPrimary
+                                <Typography
+                                    variant="body2"
+                                    fontWeight="600"
+                                    align="center"
+                                    noWrap // Prevents wrapping, shows ellipsis
+                                    sx={{
+                                        mb: 0,
+                                        width: '100%',
+                                        color: COLORS.textPrimary,
+                                        fontSize: { xs: '0.8rem', sm: '0.875rem' } // Responsive font size
                                     }}
                                 >
                                     {cliente.nombre}
                                 </Typography>
-                                <Typography 
-                                    variant="caption" 
-                                    color="textSecondary" 
-                                    align="center" 
-                                    sx={{ 
-                                        display:'block', 
-                                        width: '100%', 
-                                        overflow: 'hidden', 
-                                        textOverflow: 'ellipsis', 
-                                        whiteSpace: 'nowrap',
-                                        fontSize: '0.7rem'
+                                <Typography
+                                    variant="caption"
+                                    color="textSecondary"
+                                    align="center"
+                                    noWrap
+                                    sx={{
+                                        display: 'block',
+                                        width: '100%',
+                                        fontSize: { xs: '0.65rem', sm: '0.7rem' } // Responsive font size
                                     }}
                                 >
                                     DNI: {cliente.dni}
@@ -162,11 +168,11 @@ const CamaIndividual = ({ numero, cliente, onClickCama, onRemoveCliente }) => {
                                 <Chip
                                     label={`Clases: ${cliente.clasesPendientes ?? 0}`}
                                     size="small"
-                                    sx={{ 
-                                        mt: 1, 
-                                        bgcolor: alpha(cliente.color || COLORS.primary, 0.15), 
-                                        height: 22, 
-                                        fontSize: '0.7rem',
+                                    sx={{
+                                        mt: 0.5, // Reduced margin top
+                                        bgcolor: alpha(cliente.color || COLORS.primary, 0.15),
+                                        height: 20, // Slightly smaller chip
+                                        fontSize: { xs: '0.65rem', sm: '0.7rem' },
                                         color: cliente.color || COLORS.primary,
                                         fontWeight: '500'
                                     }}
@@ -174,47 +180,48 @@ const CamaIndividual = ({ numero, cliente, onClickCama, onRemoveCliente }) => {
                             </Box>
                         </Fade>
                     ) : (
-                        <Box sx={{ 
-                            display: 'flex', 
-                            flexDirection: 'column', 
+                        <Box sx={{
+                            display: 'flex',
+                            flexDirection: 'column',
                             alignItems: 'center',
-                            color: COLORS.textSecondary
+                            color: COLORS.textSecondary,
+                            textAlign: 'center'
                         }}>
-                            <BedIcon sx={{ 
-                                fontSize: 40, 
-                                color: COLORS.lightGray, 
-                                mb: 1.5,
+                            <BedIcon sx={{
+                                fontSize: { xs: 32, sm: 40 }, // Responsive icon size
+                                color: COLORS.lightGray,
+                                mb: 1,
                                 transition: 'all 0.3s ease',
-                                '&:hover': {
+                                '&:hover': { // Maintained hover, subtle for tap
                                     color: COLORS.secondary,
                                     transform: 'scale(1.1)'
                                 }
                             }} />
-                            <Typography variant="body2" align="center" sx={{ fontWeight: '500' }}>
+                            <Typography variant="body2" align="center" sx={{ fontWeight: '500', fontSize: { xs: '0.8rem', sm: '0.875rem' } }}>
                                 Cama Libre
                             </Typography>
-                            <Typography variant="caption" align="center" sx={{ mt: 0.5 }}>
+                            <Typography variant="caption" align="center" sx={{ mt: 0.5, fontSize: { xs: '0.7rem', sm: '0.75rem' } }}>
                                 Clic para asignar
                             </Typography>
                         </Box>
                     )}
-                </CardContent>
+                </ButtonBase>
 
                 {cliente && (
-                    <Box sx={{ display: 'flex', justifyContent: 'center', pb: 1.5 }}>
+                    <Box sx={{ display: 'flex', justifyContent: 'center', pb: 1, pt: 0 }}> {/* Adjusted padding */}
                         <Tooltip title={`Quitar a ${cliente.nombre}`} arrow>
                             <IconButton
                                 size="small"
                                 color="error"
                                 onClick={(e) => {
-                                    e.stopPropagation();
+                                    e.stopPropagation(); // Prevent Card's onClick
                                     if (window.confirm(`¿Quitar a ${cliente.nombre} de la cama ${numero}?`)) {
                                         onRemoveCliente();
                                     }
                                 }}
-                                sx={{ 
-                                    bgcolor: 'rgba(244, 67, 54, 0.1)', 
-                                    '&:hover': { 
+                                sx={{
+                                    bgcolor: 'rgba(244, 67, 54, 0.1)',
+                                    '&:hover': {
                                         bgcolor: 'rgba(244, 67, 54, 0.2)',
                                         transform: 'scale(1.1)'
                                     },
@@ -231,31 +238,34 @@ const CamaIndividual = ({ numero, cliente, onClickCama, onRemoveCliente }) => {
     );
 };
 
-// Componente para cliente en la lista con mejoras
-const ClienteItem = ({ cliente, seleccionado, onClick }) => {
+// Componente para cliente en la lista con slide-in animation
+const ClienteItem = ({ cliente, seleccionado, onClick, index }) => {
     return (
-        <Zoom in={true}>
+        <Slide direction="right" in={true} style={{ transitionDelay: `${index * 30}ms` }} mountOnEnter unmountOnExit>
             <ListItem
-                button
+                button // ListItem with button prop already has ripple
                 onClick={() => onClick(cliente)}
                 selected={seleccionado}
                 sx={{
-                    mb: 1, 
+                    mb: 1,
                     borderRadius: '8px',
-                    border: `1px solid ${seleccionado ? cliente.color || COLORS.primary : 'transparent'}`,
+                    border: `1px solid ${seleccionado ? client.color || COLORS.primary : 'transparent'}`,
                     bgcolor: seleccionado ? alpha(cliente.color || COLORS.primary, 0.08) : 'transparent',
-                    transition: 'all 0.2s ease',
-                    '&:hover': { 
+                    transition: 'all 0.2s ease, transform 0.1s ease-out', // Added transform for tap feedback
+                    '&:hover': { // Hover for desktop
                         bgcolor: alpha(cliente.color || COLORS.primary, 0.15),
                         transform: 'translateX(2px)'
+                    },
+                    '&:active': { // Basic tap feedback for mobile
+                        transform: 'scale(0.98) translateX(1px)',
                     }
                 }}
             >
                 <ListItemAvatar>
-                    <Avatar 
-                        sx={{ 
-                            bgcolor: cliente.color || COLORS.primary, 
-                            width: 38, 
+                    <Avatar
+                        sx={{
+                            bgcolor: cliente.color || COLORS.primary,
+                            width: 38,
                             height: 38,
                             boxShadow: seleccionado ? `0 0 0 2px ${alpha(cliente.color || COLORS.primary, 0.3)}` : 'none'
                         }}
@@ -265,9 +275,9 @@ const ClienteItem = ({ cliente, seleccionado, onClick }) => {
                 </ListItemAvatar>
                 <ListItemText
                     primary={
-                        <Typography 
-                            noWrap 
-                            variant="body2" 
+                        <Typography
+                            noWrap
+                            variant="body2"
                             fontWeight={seleccionado ? '600' : '500'}
                             sx={{ color: COLORS.textPrimary }}
                         >
@@ -275,40 +285,42 @@ const ClienteItem = ({ cliente, seleccionado, onClick }) => {
                         </Typography>
                     }
                     secondary={`Clases: ${cliente.clasesPendientes ?? 0}`}
-                    secondaryTypographyProps={{ 
+                    secondaryTypographyProps={{
                         variant: 'caption',
-                        sx: { 
+                        sx: {
                             color: seleccionado ? cliente.color || COLORS.primary : COLORS.textSecondary,
                             fontWeight: seleccionado ? '500' : 'normal'
                         }
                     }}
                 />
                 {seleccionado && (
-                    <ArrowRightAltIcon 
-                        sx={{ 
+                    <ArrowRightAltIcon
+                        sx={{
                             color: cliente.color || COLORS.primary,
                             animation: `${pulse} 1.5s ease infinite`
-                        }} 
+                        }}
                     />
                 )}
             </ListItem>
-        </Zoom>
+        </Slide>
     );
 };
 
-// Sección de horario mejorada
+
+// Sección de horario
 const SeccionHorario = ({ horario, diaSeleccionado, camasAsignadas, onCamaClick, onRemoveCliente }) => {
+    // No direct animation here, parent will handle fade for the whole day's schedule block
     return (
-        <Box sx={{ mb: 3, animation: `${fadeIn} 0.4s ease-out` }}>
+        <Box sx={{ mb: { xs: 2, sm: 3 } }}> {/* Responsive margin bottom */}
             <Box
                 sx={{
                     bgcolor: COLORS.primary,
                     background: `linear-gradient(135deg, ${COLORS.primary} 0%, ${COLORS.secondary} 100%)`,
                     color: '#fff',
-                    px: 2, 
+                    px: 2,
                     py: 1,
                     borderRadius: '8px 8px 0 0',
-                    display: 'flex', 
+                    display: 'flex',
                     alignItems: 'center',
                     boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
                 }}
@@ -317,16 +329,16 @@ const SeccionHorario = ({ horario, diaSeleccionado, camasAsignadas, onCamaClick,
                 <Typography variant="subtitle1" fontWeight="600">{horario}</Typography>
             </Box>
 
-            <Grid 
-                container 
-                spacing={2} 
-                sx={{ 
-                    mt: 0, 
-                    p: 2, 
-                    bgcolor: '#fff', 
-                    borderRadius: '0 0 8px 8px', 
-                    border: '1px solid', 
-                    borderColor: COLORS.lightGray, 
+            <Grid
+                container
+                spacing={{ xs: 1.5, sm: 2 }} // Responsive spacing
+                sx={{
+                    mt: 0,
+                    p: { xs: 1.5, sm: 2 }, // Responsive padding
+                    bgcolor: '#fff',
+                    borderRadius: '0 0 8px 8px',
+                    border: '1px solid',
+                    borderColor: COLORS.lightGray,
                     borderTop: 'none',
                     boxShadow: '0 4px 12px rgba(0,0,0,0.05)'
                 }}
@@ -334,7 +346,8 @@ const SeccionHorario = ({ horario, diaSeleccionado, camasAsignadas, onCamaClick,
                 {[1, 2, 3, 4].map(numCama => {
                     const camaClave = `${diaSeleccionado}-${horario}-Cama ${numCama}`;
                     return (
-                        <Grid item xs={6} sm={6} md={3} key={numCama}>
+                        // Adjusted grid for better mobile layout: 1 card per row on xs if too cramped, 2 on sm
+                        <Grid item xs={6} sm={3} key={numCama}> {/* Changed from md={3} sm={6} xs={6} -> sm={3} xs={6} to ensure 4 beds can fit reasonably on sm and 2 on xs */}
                             <CamaIndividual
                                 numero={numCama}
                                 cliente={camasAsignadas[camaClave]}
@@ -349,10 +362,10 @@ const SeccionHorario = ({ horario, diaSeleccionado, camasAsignadas, onCamaClick,
     );
 };
 
-// Componente principal de CamasPilates con diseño mejorado
+
 const CamasPilates = () => {
-    const [clientes, setClientes] = useState([]);
-    const [clientesPilates, setClientesPilates] = useState([]);
+    const [clientes, setClientes] = useState([]); // Full client list from API
+    const [clientesPilates, setClientesPilates] = useState([]); // Filtered and formatted for display
     const [clienteSeleccionado, setClienteSeleccionado] = useState(null);
     const [camasAsignadas, setCamasAsignadas] = useState({});
     const [loading, setLoading] = useState(true);
@@ -362,14 +375,32 @@ const CamasPilates = () => {
     const [isModificado, setIsModificado] = useState(false);
     const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
 
+    const theme = useTheme(); // For accessing theme breakpoints if needed, though sx prop handles most
+
+    // Memoize clientesPilates to prevent re-computation if `clientes` array reference changes but content is same
+    // And to assign colors consistently
+    const preprocessedClientesPilates = useMemo(() => {
+        const filtered = clientes.filter(c => c.actividades?.some(act => act.nombre.toLowerCase().includes('pilates')));
+        return filtered.map((cliente, index) => ({
+            id: cliente._id || `cliente-${index}`, // Ensure ID for key
+            dni: cliente.dni,
+            nombre: cliente.nombre,
+            actividades: cliente.actividades,
+            color: getRandomColor(index),
+            // Assuming clasesPendientesTotales is a field you calculate/get from backend
+            clasesPendientes: cliente.clasesPendientesTotales ?? cliente.actividades?.find(act => act.nombre.toLowerCase().includes('pilates'))?.clasesPendientes ?? 0
+        }));
+    }, [clientes]);
+
+    useEffect(() => {
+        setClientesPilates(preprocessedClientesPilates);
+    }, [preprocessedClientesPilates]);
 
 
     const seleccionarCliente = (cliente) => {
         setClienteSeleccionado(prev => prev?.id === cliente.id ? null : cliente);
     };
-    
 
-    // Función para generar colores consistentes
     const getRandomColor = (index) => {
         const colors = [
             '#5D5FEF', '#6C63FF', '#4F46E5', '#7C3AED', '#9333EA',
@@ -380,27 +411,17 @@ const CamasPilates = () => {
         return colors[index % colors.length];
     };
 
-    // Carga Inicial (sin cambios en la lógica)
     useEffect(() => {
         const cargarDatos = async () => {
             try {
                 setLoading(true);
                 setError(null);
 
-                // Cargar Clientes
                 const respClientes = await fetch('/api/clientes');
                 if (!respClientes.ok) throw new Error('Error al cargar clientes');
                 const dataClientes = await respClientes.json();
-                const clientesConPilates = dataClientes.filter(c => c.actividades?.some(act => act.nombre.toLowerCase().includes('pilates')));
-                const clientesFormateados = clientesConPilates.map((cliente, index) => ({
-                    id: cliente._id || `cliente-${index}`, dni: cliente.dni, nombre: cliente.nombre,
-                    actividades: cliente.actividades, color: getRandomColor(index),
-                    clasesPendientes: cliente.clasesPendientesTotales ?? 0
-                }));
-                setClientes(dataClientes);
-                setClientesPilates(clientesFormateados);
+                setClientes(dataClientes); // Set full list, memoized effect will filter pilates ones
 
-                // Cargar Asignaciones
                 await cargarAsignaciones();
 
             } catch (err) {
@@ -427,7 +448,7 @@ const CamasPilates = () => {
             const dataAsignaciones = await respAsignaciones.json();
             setCamasAsignadas(dataAsignaciones || {});
             setIsModificado(false);
-            console.log("Asignaciones cargadas desde API.");
+            // console.log("Asignaciones cargadas desde API.");
 
         } catch (err) {
             console.error('Error cargando asignaciones desde API:', err);
@@ -437,181 +458,170 @@ const CamasPilates = () => {
             setIsModificado(false);
         }
     };
-    // Guardar Asignaciones
-const guardarAsignaciones = async () => {
-    console.log("Intentando guardar asignaciones...");
-    setLoadingGuardado(true);
-    setError(null);
-    setSnackbar({ open: false, message: '', severity: 'info'});
+    const guardarAsignaciones = async () => {
+        setLoadingGuardado(true);
+        setError(null);
+        setSnackbar({ open: false, message: '', severity: 'info' });
 
-    try {
-        console.log("Guardando Asignaciones - Payload:", JSON.stringify({ asignaciones: camasAsignadas }, null, 2));
-        const response = await fetch('/api/camas-Pilates', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ asignaciones: camasAsignadas }),
-        });
+        try {
+            const response = await fetch('/api/camas-Pilates', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ asignaciones: camasAsignadas }),
+            });
 
-        console.log("[guardarAsignaciones] Respuesta API recibida:", response.status, response.statusText);
-
-        if (!response.ok) {
-            let errorMsg = `Error ${response.status}`;
-            try {
-                const errorData = await response.json();
-                errorMsg = errorData.message || errorData.error || errorMsg;
-                console.error("Error API (JSON):", errorData);
-            } catch (jsonError) {
-                const textError = await response.text();
-                console.error("Error API (No JSON - Texto):", textError);
-                errorMsg = `Error del servidor (${response.status}). Revisa los logs.`;
+            if (!response.ok) {
+                let errorMsg = `Error ${response.status}`;
+                try {
+                    const errorData = await response.json();
+                    errorMsg = errorData.message || errorData.error || errorMsg;
+                } catch (jsonError) {
+                    // const textError = await response.text(); // Already handled by previous logic
+                }
+                throw new Error(errorMsg);
             }
-            throw new Error(errorMsg);
+
+            const result = await response.json();
+            setIsModificado(false);
+            setSnackbar({ open: true, message: result.message || 'Asignaciones guardadas correctamente', severity: 'success' });
+
+        } catch (err) {
+            console.error('Error guardando asignaciones catch:', err);
+            setSnackbar({ open: true, message: `Error al guardar: ${err.message}`, severity: 'error' });
+        } finally {
+            setLoadingGuardado(false);
         }
+    };
 
-        const result = await response.json();
-        console.log("[guardarAsignaciones] Respuesta Éxito:", result);
-        setIsModificado(false);
-        setSnackbar({ open: true, message: result.message || 'Asignaciones guardadas correctamente en el servidor', severity: 'success' });
-
-    } catch (err) {
-        console.error('Error guardando asignaciones catch:', err);
-        setSnackbar({ open: true, message: `Error al guardar en servidor: ${err.message}`, severity: 'error' });
-    } finally {
-        setLoadingGuardado(false);
-    }
-};
-// Limpiar todas las asignaciones del día
-const limpiarAsignacionesDia = () => {
-    if (window.confirm(`¿Borrar todas las asignaciones del ${diaSeleccionado}?`)) {
-        const nuevasAsignaciones = { ...camasAsignadas };
-        
-        Object.keys(nuevasAsignaciones).forEach(key => {
-            if (key.startsWith(`${diaSeleccionado}-`)) {
-                delete nuevasAsignaciones[key];
-            }
-        });
-        
-        setCamasAsignadas(nuevasAsignaciones);
-        setIsModificado(true);
-        setSnackbar({
-            open: true,
-            message: `Todas las asignaciones del ${diaSeleccionado} han sido eliminadas`,
-            severity: 'info'
-        });
-    }
-};// Limpiar todas las asignaciones del día
-
-
-// Cambiar día seleccionado
-const handleDiaChange = (event, newValue) => {
-     if (isModificado && !window.confirm("Hay cambios sin guardar. ¿Descartar cambios y cambiar de día?")) {
-        return;
-     }
-     setDiaSeleccionado(newValue);
-     setIsModificado(false);
-     setClienteSeleccionado(null);
-};
- // Manejar clic en cama
- const handleCamaClick = (camaClave) => {
-    if (clienteSeleccionado) {
-        const [dia, horario] = camaClave.split('-');
-        const estaEnEsteHorario = Object.entries(camasAsignadas).some(
-            ([key, cli]) => key.startsWith(`${dia}-${horario}-`) && cli.id === clienteSeleccionado.id
-        );
-
-        if (estaEnEsteHorario) {
-            setSnackbar({ open: true, message: `${clienteSeleccionado.nombre} ya tiene cama a las ${horario}`, severity: 'warning' });
-            return;
-        }
-        
-        // Verificar si el cliente ya está asignado en otro horario el mismo día
-        const estaAsignadoEnDia = Object.entries(camasAsignadas).some(
-            ([key, cliente]) => 
-                key.split('-')[0] === diaSeleccionado && 
-                cliente.id === clienteSeleccionado.id
-        );
-        
-        if (estaAsignadoEnDia) {
+    const limpiarAsignacionesDia = () => {
+        if (window.confirm(`¿Borrar todas las asignaciones del ${diaSeleccionado}?`)) {
+            const nuevasAsignaciones = { ...camasAsignadas };
+            Object.keys(nuevasAsignaciones).forEach(key => {
+                if (key.startsWith(`${diaSeleccionado}-`)) {
+                    delete nuevasAsignaciones[key];
+                }
+            });
+            setCamasAsignadas(nuevasAsignaciones);
+            setIsModificado(true);
             setSnackbar({
                 open: true,
-                message: 'Este cliente ya tiene una cama asignada en este día',
-                severity: 'warning'
+                message: `Todas las asignaciones del ${diaSeleccionado} han sido eliminadas. ¡Guarda los cambios!`,
+                severity: 'info'
             });
+        }
+    };
+
+    const handleDiaChange = (event, newValue) => {
+        if (isModificado && !window.confirm("Hay cambios sin guardar. ¿Descartar cambios y cambiar de día?")) {
+            return;
+        }
+        setDiaSeleccionado(newValue);
+        setIsModificado(false); // Reset modification status as we are changing view or loading new state
+        setClienteSeleccionado(null); // Deselect client when changing day
+    };
+
+    const handleCamaClick = (camaClave) => {
+        if (camasAsignadas[camaClave] && !clienteSeleccionado) {
+            // If cama is occupied and no client is selected, select the client in the bed
+            // This is an alternative UX: tapping an occupied bed could also show info or allow quick removal.
+            // For now, let's keep the "info" snackbar.
+            const clienteEnCama = camasAsignadas[camaClave];
+             setSnackbar({ open: true, message: `Cama ocupada por: ${clienteEnCama.nombre}. DNI: ${clienteEnCama.dni}`, severity: 'info' });
+            // Optionally, select this client:
+            // setClienteSeleccionado(clienteEnCama);
             return;
         }
 
-        if (clienteSeleccionado.clasesPendientes <= 0) {
-             if (!window.confirm(`${clienteSeleccionado.nombre} no tiene clases pendientes. ¿Asignar igual?`)) return;
+
+        if (clienteSeleccionado) {
+            // If a client is selected, try to assign them
+            const [dia, horario] = camaClave.split('-'); // dia here is from camaClave, ensure it matches diaSeleccionado
+
+            // Check if already assigned in THIS specific timeslot on THIS day
+            const clienteYaEnEsteHorarioEsteDia = Object.values(camasAsignadas).find(
+                cli => cli.id === clienteSeleccionado.id && camasAsignadas[camaClave]?.id !== clienteSeleccionado.id // Exclude self if re-clicking same bed by mistake
+            );
+            // More precise check for the exact day and slot
+             const estaEnEsteHorario = Object.entries(camasAsignadas).some(
+                 ([key, cli]) => key.startsWith(`${diaSeleccionado}-${horario}-`) && cli.id === clienteSeleccionado.id
+             );
+
+
+            if (estaEnEsteHorario && camasAsignadas[camaClave]?.id !== clienteSeleccionado.id) { // If target bed is not already theirs
+                setSnackbar({ open: true, message: `${clienteSeleccionado.nombre} ya tiene una cama asignada a las ${horario} este día.`, severity: 'warning' });
+                return;
+            }
+            
+            // Check if client is assigned anywhere else on THIS selected day but a DIFFERENT timeslot
+            const asignacionesDelClienteEnDiaSeleccionado = Object.entries(camasAsignadas).filter(
+                ([key, cli]) => key.startsWith(`${diaSeleccionado}-`) && cli.id === clienteSeleccionado.id
+            );
+
+            const estaAsignadoEnOtroHorarioHoy = asignacionesDelClienteEnDiaSeleccionado.some(
+                ([key]) => !key.startsWith(`${diaSeleccionado}-${horario}-`) // Key does not belong to current slot
+            );
+            
+            if (estaAsignadoEnOtroHorarioHoy) {
+                 setSnackbar({
+                     open: true,
+                     message: `${clienteSeleccionado.nombre} ya está asignado a otra hora el ${diaSeleccionado}. Un cliente por día.`,
+                     severity: 'warning'
+                 });
+                 return;
+             }
+
+
+            if (clienteSeleccionado.clasesPendientes <= 0) {
+                if (!window.confirm(`${clienteSeleccionado.nombre} no tiene clases pendientes. ¿Asignar de todas formas?`)) return;
+            }
+
+            setCamasAsignadas(prev => ({ ...prev, [camaClave]: clienteSeleccionado }));
+            setClienteSeleccionado(null); // Deselect after assignment
+            setIsModificado(true);
+        } else if (!camasAsignadas[camaClave]) {
+            // If no client selected and bed is free
+             setSnackbar({ open: true, message: `Cama libre. Selecciona un cliente de la lista para asignar.`, severity: 'info' });
         }
-
-        console.log(`Asignando cliente ${clienteSeleccionado.id} a cama ${camaClave}`);
-        setCamasAsignadas(prev => ({ ...prev, [camaClave]: clienteSeleccionado }));
-        setClienteSeleccionado(null);
-        setIsModificado(true);
-    } else {
-         const clienteEnCama = camasAsignadas[camaClave];
-         if(clienteEnCama) setSnackbar({ open: true, message: `Cama ocupada por: ${clienteEnCama.nombre}`, severity: 'info' });
-         console.log("Clic en cama sin cliente seleccionado:", camaClave);
-    }
-};
-const handleRemoveCliente = (camaClave) => {
-    setCamasAsignadas(prev => {
-        const nuevasAsignaciones = { ...prev };
-        delete nuevasAsignaciones[camaClave];
-        return nuevasAsignaciones;
-    });
-    setIsModificado(true);
-    setSnackbar({
-        open: true,
-        message: `Cliente eliminado de la cama`,
-        severity: 'success'
-    });
-};
-
-const handleCloseSnackbar = (event, reason) => {
-    if (reason === 'clickaway') return;
-    setSnackbar({ ...snackbar, open: false });
-};
-
-// Renderizado
-if (loading) {
-    return <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '80vh' }}><CircularProgress size={60} /><Typography sx={{ml:2}}>Cargando datos...</Typography></Box>;
-}
-
-if (error && !Object.keys(camasAsignadas).length && !clientesPilates.length) {
-     return <Container maxWidth="lg" sx={{ mt: 4 }}><Alert severity="error" action={<Button color="inherit" size="small" onClick={() => window.location.reload()}>Recargar</Button>}>{error}</Alert></Container>;
-}
+        // If bed is occupied and no client selected, the initial check handles it.
+    };
 
 
+    const handleRemoveCliente = (camaClave) => {
+        const clienteEnCama = camasAsignadas[camaClave];
+        if (clienteEnCama) {
+            // No confirmation here as it's via dedicated button which has its own confirm
+            setCamasAsignadas(prev => {
+                const nuevasAsignaciones = { ...prev };
+                delete nuevasAsignaciones[camaClave];
+                return nuevasAsignaciones;
+            });
+            setIsModificado(true);
+            setSnackbar({
+                open: true,
+                message: `${clienteEnCama.nombre} ha sido quitado de la cama.`,
+                severity: 'success'
+            });
+        }
+    };
+
+
+    const handleCloseSnackbar = (event, reason) => {
+        if (reason === 'clickaway') return;
+        setSnackbar({ ...snackbar, open: false });
+    };
 
     if (loading) {
         return (
-            <Box sx={{ 
-                display: 'flex', 
-                justifyContent: 'center', 
-                alignItems: 'center', 
-                height: '80vh',
-                flexDirection: 'column',
-                animation: `${fadeIn} 0.5s ease-out`
+            <Box sx={{
+                display: 'flex', justifyContent: 'center', alignItems: 'center', height: '80vh',
+                flexDirection: 'column', animation: `${fadeIn} 0.5s ease-out`
             }}>
-                <CircularProgress 
-                    size={60} 
-                    thickness={4}
-                    sx={{ 
-                        color: COLORS.primary,
-                        mb: 2
-                    }} 
-                />
-                <Typography 
-                    variant="h6" 
-                    sx={{
-                        color: COLORS.textPrimary,
-                        fontWeight: '500',
-                        background: `linear-gradient(135deg, ${COLORS.primary} 0%, ${COLORS.secondary} 100%)`,
-                        WebkitBackgroundClip: 'text',
-                        WebkitTextFillColor: 'transparent'
-                    }}
-                >
+                <CircularProgress size={60} thickness={4} sx={{ color: COLORS.primary, mb: 2 }} />
+                <Typography variant="h6" sx={{
+                    color: COLORS.textPrimary, fontWeight: '500',
+                    background: `linear-gradient(135deg, ${COLORS.primary} 0%, ${COLORS.secondary} 100%)`,
+                    WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent'
+                }}>
                     Cargando datos...
                 </Typography>
             </Box>
@@ -621,28 +631,15 @@ if (error && !Object.keys(camasAsignadas).length && !clientesPilates.length) {
     if (error && !Object.keys(camasAsignadas).length && !clientesPilates.length) {
         return (
             <Container maxWidth="lg" sx={{ mt: 4 }}>
-                <Alert 
-                    severity="error" 
+                <Alert
+                    severity="error"
                     action={
-                        <Button 
-                            color="inherit" 
-                            size="small" 
-                            onClick={() => window.location.reload()}
-                            sx={{ 
-                                bgcolor: 'rgba(255,255,255,0.2)',
-                                '&:hover': {
-                                    bgcolor: 'rgba(255,255,255,0.3)'
-                                }
-                            }}
-                        >
-                            Recargar
-                        </Button>
+                        <Button color="inherit" size="small" onClick={() => window.location.reload()}
+                            sx={{
+                                bgcolor: 'rgba(255,255,255,0.2)', '&:hover': { bgcolor: 'rgba(255,255,255,0.3)' }
+                            }}>Recargar</Button>
                     }
-                    sx={{
-                        borderRadius: '8px',
-                        boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-                        borderLeft: `4px solid ${COLORS.error}`
-                    }}
+                    sx={{ borderRadius: '8px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)', borderLeft: `4px solid ${COLORS.error}` }}
                 >
                     {error}
                 </Alert>
@@ -651,225 +648,137 @@ if (error && !Object.keys(camasAsignadas).length && !clientesPilates.length) {
     }
 
     return (
-        <Container maxWidth="xl" sx={{ mt: 4, mb: 8 }}>
-            {/* Encabezado mejorado */}
-            <Box sx={{ mb: 4, textAlign: 'center' }}>
-                <Typography 
-                    variant="h3" 
-                    component="h1" 
-                    gutterBottom 
-                    sx={{ 
-                        display: 'flex', 
-                        alignItems: 'center', 
-                        justifyContent: 'center', 
-                        gap: 2, 
-                        fontWeight: '700',
-                        color: COLORS.textPrimary,
-                        background: `linear-gradient(135deg, ${COLORS.primary} 0%, ${COLORS.secondary} 100%)`,
-                        WebkitBackgroundClip: 'text',
-                        WebkitTextFillColor: 'transparent',
-                        animation: `${fadeIn} 0.6s ease-out`
-                    }}
-                >
-                    <FitnessCenterIcon fontSize="large" />
-                    Gestión de Camas de Pilates
-                </Typography>
-                <Typography 
-                    variant="subtitle1" 
-                    color="textSecondary" 
+        <Container maxWidth="xl" sx={{ mt: { xs: 2, sm: 4 }, mb: 8, px: { xs: 1, sm: 2, md: 3 } }}>
+            <Box sx={{ mb: { xs: 3, sm: 4 }, textAlign: 'center' }}>
+                <Typography
+                    variant="h3" // Base variant
+                    component="h1"
+                    gutterBottom
                     sx={{
-                        maxWidth: '700px',
-                        margin: '0 auto',
-                        color: COLORS.textSecondary,
-                        fontSize: '1.1rem'
+                        display: 'flex', alignItems: 'center', justifyContent: 'center', gap: { xs: 1, sm: 2 },
+                        fontWeight: '700', color: COLORS.textPrimary,
+                        background: `linear-gradient(135deg, ${COLORS.primary} 0%, ${COLORS.secondary} 100%)`,
+                        WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
+                        animation: `${fadeIn} 0.6s ease-out`,
+                        fontSize: { xs: '2rem', sm: '2.5rem', md: '3rem' } // Responsive font size
                     }}
                 >
-                    Organiza las asignaciones diarias de clientes a las camas por horario
+                    <FitnessCenterIcon sx={{ fontSize: { xs: '2.2rem', sm: '2.8rem', md: '3.3rem' } }} />
+                    Gestión de Camas
+                </Typography>
+                <Typography variant="subtitle1" color="textSecondary" sx={{
+                    maxWidth: '700px', margin: '0 auto', color: COLORS.textSecondary,
+                    fontSize: { xs: '0.9rem', sm: '1rem', md: '1.1rem' } // Responsive font size
+                }}>
+                    Organiza las asignaciones diarias de clientes a las camas por horario.
                 </Typography>
             </Box>
 
             {error && (Object.keys(camasAsignadas).length > 0 || clientesPilates.length > 0) && (
-                <Alert 
-                    severity="error" 
-                    sx={{ 
-                        mb: 3, 
-                        borderRadius: '8px',
-                        boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-                        borderLeft: `4px solid ${COLORS.error}`
-                    }} 
-                    onClose={() => setError(null)}
-                >
+                <Alert severity="error" sx={{
+                    mb: 3, borderRadius: '8px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+                    borderLeft: `4px solid ${COLORS.error}`
+                }} onClose={() => setError(null)}>
                     {error}
                 </Alert>
             )}
 
-            <Grid container spacing={3}>
-                {/* Sección Lateral (Clientes) mejorada */}
+            <Grid container spacing={{ xs: 2, md: 3 }}>
                 <Grid item xs={12} md={3}>
-                    <Paper 
-                        elevation={2} 
-                        sx={{ 
-                            p: 2, 
-                            borderRadius: '12px', 
-                            height: '100%', 
-                            position: 'sticky', 
-                            top: 20, 
-                            display: 'flex', 
-                            flexDirection: 'column',
-                            bgcolor: '#fff',
-                            boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
-                            border: `1px solid ${COLORS.lightGray}`
+                    <Paper
+                        elevation={2}
+                        sx={{
+                            p: 2, borderRadius: '12px', height: '100%',
+                            position: { xs: 'static', md: 'sticky' }, // Static on mobile, sticky on larger
+                            top: 20, display: 'flex', flexDirection: 'column', bgcolor: '#fff',
+                            boxShadow: '0 4px 12px rgba(0,0,0,0.05)', border: `1px solid ${COLORS.lightGray}`,
+                            maxHeight: { xs: '60vh', sm: '70vh', md: 'calc(100vh - 120px)' }, // Adjusted max height for mobile
+                            mb: { xs: 3, md: 0 } // Margin bottom on mobile when it stacks
                         }}
                     >
-                        <Typography 
-                            variant="h5" 
-                            sx={{ 
-                                display: 'flex', 
-                                alignItems: 'center', 
-                                mb: 2, 
-                                pb: 1.5, 
-                                borderBottom: `1px solid ${COLORS.lightGray}`,
-                                color: COLORS.textPrimary,
-                                fontWeight: '600'
-                            }}
-                        >
-                            <PersonIcon sx={{ color: COLORS.primary, mr: 1.5 }} /> 
+                        <Typography variant="h5" sx={{
+                            display: 'flex', alignItems: 'center', mb: 2, pb: 1.5,
+                            borderBottom: `1px solid ${COLORS.lightGray}`, color: COLORS.textPrimary,
+                            fontWeight: '600', fontSize: { xs: '1.2rem', sm: '1.35rem' } // Responsive
+                        }}>
+                            <PersonIcon sx={{ color: COLORS.primary, mr: 1.5 }} />
                             Clientes Pilates
-                            <Chip 
-                                label={clientesPilates.length} 
-                                size="small" 
-                                sx={{ 
-                                    ml: 'auto', 
-                                    bgcolor: alpha(COLORS.primary, 0.1),
-                                    color: COLORS.primary,
-                                    fontWeight: '600'
-                                }} 
-                            />
+                            <Chip label={clientesPilates.length} size="small" sx={{
+                                ml: 'auto', bgcolor: alpha(COLORS.primary, 0.1), color: COLORS.primary, fontWeight: '600'
+                            }} />
                         </Typography>
-                        
-                        {clienteSeleccionado && ( 
-                            <Alert 
-                                severity="success" 
-                                sx={{ 
-                                    mb: 2, 
-                                    fontSize: '0.8rem',
-                                    borderRadius: '8px',
-                                    bgcolor: alpha(COLORS.success, 0.1),
-                                    color: COLORS.textPrimary,
-                                    border: `1px solid ${alpha(COLORS.success, 0.3)}`,
-                                    '& .MuiAlert-icon': {
-                                        color: COLORS.success
-                                    }
-                                }} 
-                                icon={<CheckCircleIcon fontSize='small'/>}
-                            >
+
+                        {clienteSeleccionado && (
+                            <Alert severity="success" sx={{
+                                mb: 2, fontSize: '0.8rem', borderRadius: '8px',
+                                bgcolor: alpha(COLORS.success, 0.1), color: COLORS.textPrimary,
+                                border: `1px solid ${alpha(COLORS.success, 0.3)}`,
+                                '& .MuiAlert-icon': { color: COLORS.success }
+                            }} icon={<CheckCircleIcon fontSize='small' />}>
                                 <Box>
                                     <strong>Seleccionado:</strong> {clienteSeleccionado.nombre}
                                     <Typography variant="caption" display="block" sx={{ mt: 0.5 }}>
-                                        Haz clic en una cama libre para asignar
+                                        Haz clic en una cama libre para asignar.
                                     </Typography>
                                 </Box>
-                            </Alert> 
+                            </Alert>
                         )}
-                        
-                        <Box sx={{ flexGrow: 1, overflowY: 'auto', maxHeight: 'calc(100vh - 300px)' }}>
+
+                        <Box sx={{ flexGrow: 1, overflowY: 'auto' }}> {/* List takes remaining space and scrolls */}
                             {clientesPilates.length > 0 ? (
-                                <List dense sx={{ pt: 0 }}> 
+                                <List dense sx={{ pt: 0 }}>
                                     {clientesPilates.map((cliente, index) => (
-                                        <ClienteItem 
-                                            key={cliente.id} 
-                                            cliente={cliente} 
-                                            seleccionado={clienteSeleccionado?.id === cliente.id} 
+                                        <ClienteItem
+                                            key={cliente.id}
+                                            cliente={cliente}
+                                            seleccionado={clienteSeleccionado?.id === cliente.id}
                                             onClick={seleccionarCliente}
+                                            index={index} // For staggered animation
                                         />
-                                    ))} 
+                                    ))}
                                 </List>
                             ) : (
-                                <Box sx={{ 
-                                    textAlign: 'center', 
-                                    py: 4,
-                                    animation: `${fadeIn} 0.5s ease-out`
-                                }}>
+                                <Box sx={{ textAlign: 'center', py: 4, animation: `${fadeIn} 0.5s ease-out` }}>
                                     <PersonIcon sx={{ fontSize: 40, color: COLORS.lightGray, mb: 1 }} />
                                     <Typography variant="body2" color="textSecondary">
-                                        No hay clientes de pilates registrados
+                                        No hay clientes de pilates registrados.
                                     </Typography>
                                 </Box>
                             )}
                         </Box>
-                        
-                        <Box sx={{ mt: 'auto', pt: 2 }}>
-                            <Button 
-                                fullWidth 
-                                variant="contained" 
-                                color="primary" 
-                                startIcon={
-                                    loadingGuardado ? (
-                                        <CircularProgress size={20} color="inherit" />
-                                    ) : (
-                                        <SaveIcon />
-                                    )
-                                } 
-                                onClick={guardarAsignaciones} 
-                                disabled={!isModificado || loadingGuardado}
+
+                        <Box sx={{ mt: 'auto', pt: 2 }}> {/* Buttons stick to bottom of this paper */}
+                            <Button fullWidth variant="contained" color="primary"
+                                startIcon={loadingGuardado ? <CircularProgress size={20} color="inherit" /> : <SaveIcon />}
+                                onClick={guardarAsignaciones} disabled={!isModificado || loadingGuardado}
                                 sx={{
                                     bgcolor: COLORS.primary,
                                     background: `linear-gradient(135deg, ${COLORS.primary} 0%, ${COLORS.secondary} 100%)`,
-                                    height: '42px',
-                                    borderRadius: '8px',
-                                    fontWeight: '600',
-                                    letterSpacing: '0.5px',
+                                    height: '42px', borderRadius: '8px', fontWeight: '600', letterSpacing: '0.5px',
                                     boxShadow: '0 2px 8px rgba(93, 95, 239, 0.3)',
-                                    '&:hover': {
-                                        boxShadow: '0 4px 12px rgba(93, 95, 239, 0.4)',
-                                        transform: 'translateY(-1px)'
-                                    },
+                                    '&:hover': { boxShadow: '0 4px 12px rgba(93, 95, 239, 0.4)', transform: 'translateY(-1px)' },
                                     transition: 'all 0.3s ease',
-                                    '&:disabled': {
-                                        background: COLORS.lightGray,
-                                        color: COLORS.textSecondary
-                                    }
+                                    '&:disabled': { background: COLORS.lightGray, color: COLORS.textSecondary, boxShadow: 'none' }
                                 }}
                             >
                                 {loadingGuardado ? 'Guardando...' : 'Guardar Cambios'}
                             </Button>
-                            
                             {isModificado && (
-                                <Typography 
-                                    variant="caption" 
-                                    sx={{
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                        mt: 1,
-                                        color: COLORS.warning,
-                                        fontWeight: '500'
-                                    }}
-                                >
+                                <Typography variant="caption" sx={{
+                                    display: 'flex', alignItems: 'center', justifyContent: 'center', mt: 1,
+                                    color: COLORS.warning, fontWeight: '500'
+                                }}>
                                     <InfoIcon sx={{ fontSize: '1rem', mr: 0.5 }} />
                                     Cambios sin guardar
                                 </Typography>
                             )}
-                            
-                            <Button 
-                                fullWidth 
-                                variant="outlined" 
-                                color="error" 
-                                startIcon={<ClearIcon />}
+                            <Button fullWidth variant="outlined" color="error" startIcon={<ClearIcon />}
                                 onClick={limpiarAsignacionesDia}
-                                sx={{ 
-                                    mt: 2,
-                                    height: '42px',
-                                    borderRadius: '8px',
-                                    fontWeight: '600',
-                                    letterSpacing: '0.5px',
-                                    borderColor: COLORS.error,
-                                    color: COLORS.error,
-                                    '&:hover': {
-                                        bgcolor: alpha(COLORS.error, 0.08),
-                                        borderColor: COLORS.error,
-                                        transform: 'translateY(-1px)'
-                                    },
+                                sx={{
+                                    mt: isModificado ? 1 : 2, // Adjust margin based on warning presence
+                                    height: '42px', borderRadius: '8px', fontWeight: '600', letterSpacing: '0.5px',
+                                    borderColor: COLORS.error, color: COLORS.error,
+                                    '&:hover': { bgcolor: alpha(COLORS.error, 0.08), borderColor: COLORS.error, transform: 'translateY(-1px)' },
                                     transition: 'all 0.3s ease'
                                 }}
                                 disabled={!Object.keys(camasAsignadas).some(key => key.startsWith(`${diaSeleccionado}-`))}
@@ -880,170 +789,83 @@ if (error && !Object.keys(camasAsignadas).length && !clientesPilates.length) {
                     </Paper>
                 </Grid>
 
-                {/* Distribución de Camas (Tabs y Horarios) mejorada */}
                 <Grid item xs={12} md={9}>
-                    <Paper 
-                        elevation={2} 
-                        sx={{ 
-                            borderRadius: '12px', 
-                            overflow: 'hidden',
-                            bgcolor: '#fff',
-                            boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
-                            border: `1px solid ${COLORS.lightGray}`
-                        }}
-                    >
-                        {/* Tabs para los Días mejorados */}
+                    <Paper elevation={2} sx={{
+                        borderRadius: '12px', overflow: 'hidden', bgcolor: '#fff',
+                        boxShadow: '0 4px 12px rgba(0,0,0,0.05)', border: `1px solid ${COLORS.lightGray}`
+                    }}>
                         <Box sx={{ bgcolor: '#fff', borderBottom: `1px solid ${COLORS.lightGray}` }}>
-                            <Tabs 
-                                value={diaSeleccionado} 
-                                onChange={handleDiaChange} 
-                                variant="scrollable" 
-                                scrollButtons="auto" 
-                                allowScrollButtonsMobile 
-                                textColor="primary" 
+                            <Tabs
+                                value={diaSeleccionado}
+                                onChange={handleDiaChange}
+                                variant="scrollable"
+                                scrollButtons="auto"
+                                allowScrollButtonsMobile
+                                textColor="primary"
                                 indicatorColor="primary"
                                 sx={{
-                                    '& .MuiTabs-indicator': {
-                                        height: '4px',
-                                        borderRadius: '4px 4px 0 0'
-                                    }
+                                    '& .MuiTabs-indicator': { height: '4px', borderRadius: '4px 4px 0 0' },
+                                    minHeight: 'auto' // Reduce default height of Tabs
                                 }}
                             >
-                                {DIAS_SEMANA.map(dia => ( 
-                                    <Tab 
-                                        key={dia} 
+                                {DIAS_SEMANA.map(dia => (
+                                    <Tab key={dia} value={dia}
                                         label={
-                                            <Box sx={{ 
-                                                display: 'flex', 
-                                                alignItems: 'center',
-                                                textTransform: 'none',
-                                                fontSize: '0.9rem'
-                                            }}>
-                                                <EventIcon sx={{ 
-                                                    fontSize: '1rem', 
-                                                    mr: 1,
-                                                    color: diaSeleccionado === dia ? COLORS.primary : COLORS.textSecondary
-                                                }} />
+                                            <Box sx={{ display: 'flex', alignItems: 'center', textTransform: 'none', fontSize: '0.9rem' }}>
+                                                <EventIcon sx={{ fontSize: '1rem', mr: { xs: 0.5, sm: 1 }, color: diaSeleccionado === dia ? COLORS.primary : COLORS.textSecondary }} />
                                                 {dia}
                                             </Box>
-                                        } 
-                                        value={dia} 
-                                        sx={{ 
-                                            fontWeight: diaSeleccionado === dia ? '600' : '500', 
-                                            px: {xs: 1.5, sm: 2},
-                                            py: 1.5,
-                                            minHeight: 'auto',
+                                        }
+                                        sx={{
+                                            fontWeight: diaSeleccionado === dia ? '600' : '500',
+                                            px: { xs: 1, sm: 2 }, py: { xs: 1, sm: 1.5 }, minHeight: 'auto',
+                                            minWidth: { xs: 'auto', sm: '90px' }, // Allow tabs to be smaller on mobile
                                             color: diaSeleccionado === dia ? COLORS.primary : COLORS.textSecondary,
-                                            '&:hover': {
-                                                color: COLORS.primary,
-                                                bgcolor: alpha(COLORS.primary, 0.05)
-                                            }
+                                            '&:hover': { color: COLORS.primary, bgcolor: alpha(COLORS.primary, 0.05) }
                                         }}
                                     />
                                 ))}
                             </Tabs>
                         </Box>
 
-                        {/* Contenido del Día Seleccionado */}
-                        <Box sx={{ p: { xs: 2, sm: 3 } }}>
-                            {clienteSeleccionado && (
-                                <Box
-                                    sx={{
-                                        display: 'flex', 
-                                        alignItems: 'center', 
-                                        p: 2, 
-                                        mb: 3,
-                                        borderRadius: '8px', 
-                                        bgcolor: alpha(clienteSeleccionado.color || COLORS.primary, 0.08),
-                                        border: `1px solid ${alpha(clienteSeleccionado.color || COLORS.primary, 0.2)}`,
-                                        boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
-                                        animation: `${fadeIn} 0.4s ease-out`
-                                    }}
-                                >
-                                    <Avatar sx={{ 
-                                        bgcolor: clienteSeleccionado.color || COLORS.primary, 
-                                        mr: 2, 
-                                        width: 40, 
-                                        height: 40,
-                                        boxShadow: `0 0 0 2px ${alpha(clienteSeleccionado.color || COLORS.primary, 0.3)}`
-                                    }}>
-                                        <PersonIcon fontSize="small" />
-                                    </Avatar>
-                                    <Box sx={{flexGrow: 1}}>
-                                        <Typography variant="body2" fontWeight="600" sx={{ color: COLORS.textPrimary }}>
-                                            {clienteSeleccionado.nombre}
-                                        </Typography>
-                                        <Typography variant="caption" color="textSecondary">
-                                            Selecciona una cama libre para asignar
-                                        </Typography>
-                                    </Box>
-                                    <Button 
-                                        sx={{ 
-                                            ml: 'auto', 
-                                            flexShrink: 0,
-                                            textTransform: 'none',
-                                            fontWeight: '500',
-                                            color: COLORS.textSecondary,
-                                            '&:hover': {
-                                                color: COLORS.primary
-                                            }
-                                        }} 
-                                        variant="text" 
-                                        size="small" 
-                                        onClick={() => setClienteSeleccionado(null)}
-                                    >
-                                        Cancelar
-                                    </Button>
-                                </Box>
-                            )}
-
-                            {/* Renderizar Secciones de Horario */}
-                            {HORARIOS.map((horario, index) => (
-                                <SeccionHorario
-                                    key={horario}
-                                    horario={horario}
-                                    diaSeleccionado={diaSeleccionado}
-                                    camasAsignadas={camasAsignadas}
-                                    onCamaClick={handleCamaClick}
-                                    onRemoveCliente={handleRemoveCliente}
-                                />
-                            ))}
-                        </Box>
+                        {/* Content for the selected day with Fade transition */}
+                        <Fade in={true} key={diaSeleccionado} timeout={500}>
+                             <Box sx={{ p: { xs: 1.5, sm: 2, md: 3 } }}> {/* Responsive padding for content area */}
+                                {HORARIOS.map((horario) => (
+                                    <SeccionHorario
+                                        key={`${diaSeleccionado}-${horario}`} // Ensure key changes when dia changes for re-animation
+                                        horario={horario}
+                                        diaSeleccionado={diaSeleccionado}
+                                        camasAsignadas={camasAsignadas}
+                                        onCamaClick={handleCamaClick}
+                                        onRemoveCliente={handleRemoveCliente}
+                                    />
+                                ))}
+                            </Box>
+                        </Fade>
                     </Paper>
                 </Grid>
             </Grid>
 
-            {/* Snackbar para notificaciones mejorado */}
-            <Snackbar 
-                open={snackbar.open} 
-                autoHideDuration={snackbar.severity === 'error' ? null : 4000} 
-                onClose={handleCloseSnackbar} 
+            <Snackbar
+                open={snackbar.open}
+                autoHideDuration={snackbar.severity === 'error' ? null : (snackbar.severity === 'info' ? 2500 : 4000) }
+                onClose={handleCloseSnackbar}
                 anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-                TransitionComponent={Fade}
+                TransitionComponent={Fade} // Simple Fade for Snackbar
             >
-                <Alert 
-                    onClose={handleCloseSnackbar} 
-                    severity={snackbar.severity} 
-                    variant="filled" 
-                    sx={{ 
-                        width: '100%', 
-                        boxShadow: 6,
-                        borderRadius: '8px',
-                        alignItems: 'center',
-                        '& .MuiAlert-message': {
-                            flexGrow: 1
-                        }
-                    }} 
-                    iconMapping={{ 
-                        success: <CheckCircleIcon fontSize="inherit" />, 
-                        error: <ErrorOutlineIcon fontSize="inherit" />, 
-                        warning: <ErrorOutlineIcon fontSize="inherit" />, 
-                        info: <InfoIcon fontSize="inherit" /> 
+                <Alert
+                    onClose={handleCloseSnackbar} severity={snackbar.severity} variant="filled"
+                    sx={{
+                        width: '100%', boxShadow: 6, borderRadius: '8px', alignItems: 'center',
+                        '& .MuiAlert-message': { flexGrow: 1 }
+                    }}
+                    iconMapping={{
+                        success: <CheckCircleIcon fontSize="inherit" />, error: <ErrorOutlineIcon fontSize="inherit" />,
+                        warning: <ErrorOutlineIcon fontSize="inherit" />, info: <InfoIcon fontSize="inherit" />
                     }}
                 >
-                    <Typography variant="body2" fontWeight="500">
-                        {snackbar.message}
-                    </Typography>
+                    <Typography variant="body2" fontWeight="500">{snackbar.message}</Typography>
                 </Alert>
             </Snackbar>
         </Container>
