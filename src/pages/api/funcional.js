@@ -2,7 +2,7 @@
 import clientPromise from '@/lib/mongodb'; // Asegúrate que la ruta sea correcta
 
 const ACTIVIDAD_KEY = 'funcional'; // Clave para la colección y el tipo de documento
-const DB_NAME = 'baseprueba'; // Nombre de tu base de datos
+const DB_NAME = 'test'; // Nombre de tu base de datos
 
 export default async function handler(req, res) {
   try {

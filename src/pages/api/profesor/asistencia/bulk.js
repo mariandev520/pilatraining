@@ -6,7 +6,7 @@ export default async function handler(req, res) {
     if (req.method === 'POST') {
         try {
             const client = await clientPromise;
-            const db = client.db('baseprueba');
+            const db = client.db('test');
             const asistenciaCollection = db.collection('asistencia');
             const updatesPayload = req.body; // Array de { semana, profesorId, dias }
 

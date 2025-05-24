@@ -270,7 +270,7 @@ const cardData = [
     title: "Ayuda",
     description: "Guia del Dasb Evolution",
     color: "rgb(98, 5, 219)", // Púrpura
-    link: "/https://landing-sand-three-46.vercel.app/help",
+    link: "/https://www.traininghub.net.ar",
     badge: faIdCard,
     actionText: "Manual de Usuario",
     openInNewTab: false

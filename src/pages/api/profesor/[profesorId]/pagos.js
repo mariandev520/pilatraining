@@ -14,7 +14,7 @@ export default async function handler(req, res) {
     try {
         console.log(`[API Pagos Handler] Conectando a la base de datos para profesorId: ${profesorId}`);
         const client = await clientPromise;
-        const db = client.db(process.env.MONGODB_DB || 'baseprueba'); // Usa variable de entorno para el nombre de la DB o tu default
+        const db = client.db(process.env.MONGODB_DB || 'test'); // Usa variable de entorno para el nombre de la DB o tu default
         console.log(`[API Pagos Handler] Conectado a DB: ${db.databaseName}`);
         const pagosCollection = db.collection('historialPagos');
         const profesoresCollection = db.collection('profesor');
