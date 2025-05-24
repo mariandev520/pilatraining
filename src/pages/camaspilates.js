@@ -458,11 +458,8 @@ const CamasPilates = () => {
             setIsModificado(false);
         }
     };
-    const guardarAsignaciones = async () => {
+   const guardarAsignaciones = async () => {
         setLoadingGuardado(true);
-        setError(null);
-        setSnackbar({ open: false, message: '', severity: 'info' });
-
         try {
             const response = await fetch('/api/camas-Pilates', {
                 method: 'POST',
@@ -470,29 +467,26 @@ const CamasPilates = () => {
                 body: JSON.stringify({ asignaciones: camasAsignadas }),
             });
 
-            if (!response.ok) {
-                let errorMsg = `Error ${response.status}`;
-                try {
-                    const errorData = await response.json();
-                    errorMsg = errorData.message || errorData.error || errorMsg;
-                } catch (jsonError) {
-                    // const textError = await response.text(); // Already handled by previous logic
-                }
-                throw new Error(errorMsg);
-            }
-
-            const result = await response.json();
+            if (!response.ok) throw new Error('Error al guardar');
+            
             setIsModificado(false);
-            setSnackbar({ open: true, message: result.message || 'Asignaciones guardadas correctamente', severity: 'success' });
-
+            setSnackbar({
+                open: true,
+                message: 'Asignaciones guardadas correctamente',
+                severity: 'success'
+            });
         } catch (err) {
-            console.error('Error guardando asignaciones catch:', err);
-            setSnackbar({ open: true, message: `Error al guardar: ${err.message}`, severity: 'error' });
+            setSnackbar({
+                open: true,
+                message: `Error al guardar: ${err.message}`,
+                severity: 'error'
+            });
         } finally {
             setLoadingGuardado(false);
         }
     };
 
+    // Función para limpiar asignaciones del día
     const limpiarAsignacionesDia = () => {
         if (window.confirm(`¿Borrar todas las asignaciones del ${diaSeleccionado}?`)) {
             const nuevasAsignaciones = { ...camasAsignadas };
@@ -503,11 +497,6 @@ const CamasPilates = () => {
             });
             setCamasAsignadas(nuevasAsignaciones);
             setIsModificado(true);
-            setSnackbar({
-                open: true,
-                message: `Todas las asignaciones del ${diaSeleccionado} han sido eliminadas. ¡Guarda los cambios!`,
-                severity: 'info'
-            });
         }
     };
 
@@ -586,28 +575,21 @@ const CamasPilates = () => {
     };
 
 
+   
+    // Handler para eliminar cliente de cama
     const handleRemoveCliente = (camaClave) => {
-        const clienteEnCama = camasAsignadas[camaClave];
-        if (clienteEnCama) {
-            // No confirmation here as it's via dedicated button which has its own confirm
-            setCamasAsignadas(prev => {
-                const nuevasAsignaciones = { ...prev };
-                delete nuevasAsignaciones[camaClave];
-                return nuevasAsignaciones;
-            });
-            setIsModificado(true);
-            setSnackbar({
-                open: true,
-                message: `${clienteEnCama.nombre} ha sido quitado de la cama.`,
-                severity: 'success'
-            });
-        }
+        setCamasAsignadas(prev => {
+            const nuevas = { ...prev };
+            delete nuevas[camaClave];
+            return nuevas;
+        });
+        setIsModificado(true);
     };
 
 
-    const handleCloseSnackbar = (event, reason) => {
-        if (reason === 'clickaway') return;
-        setSnackbar({ ...snackbar, open: false });
+    // Handler para cerrar snackbar
+    const handleCloseSnackbar = () => {
+        setSnackbar(prev => ({ ...prev, open: false }));
     };
 
     if (loading) {
