@@ -29,12 +29,12 @@ export default function Login() {
   // Updated color palette with pastel colors, soft greens and blues
   const COLORS = {
     primary: "#92D9B9", // Soft pastel green
-    primaryDark: "#7EB7A2", // Slightly darker pastel green
+    primaryDark: "#edf0bb ", // Slightly darker pastel green
     secondary: "#535C68", // Soft dark gray for text
-    background: "#F5F9F8", // Very light mint background
+    background: "#9cedf7  ", // Very light mint background
     accent: "#96CBDE", // Soft pastel blue
     formBg: "rgba(255, 255, 255, 0.95)", // Light form background
-    error: "#F47B7B", // Soft red for errors
+    error: "#f4a972 ", // Soft red for errors
     white: "#FFFFFF", // White
     textLight: "#8C9CAD", // Light text color
   };
