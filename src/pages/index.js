@@ -14,6 +14,7 @@ import {
 } from "@mui/material";
 import 'materialize-css/dist/css/materialize.min.css';
 
+
 // Create motion components
 const MotionPaper = motion(Paper);
 const MotionBox = motion(Box);
