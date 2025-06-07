@@ -1,3 +1,20 @@
+/* -- Definición de la paleta de colores y fuentes como variables CSS -- */
+:root {
+  --primary: #92D9B9;
+  --primary-dark: #edf0bb;
+  --secondary: #535C68;
+  --background: #9cedf7;
+  --accent: #96CBDE;
+  --form-bg: rgba(255, 255, 255, 0.95);
+  --error: #f4a972;
+  --error-text: #663333;
+  --white: #FFFFFF;
+  --text-light: #8C9CAD;
+
+  --font-main: 'Poppins', sans-serif;
+  --font-display: 'Montserrat', sans-serif;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

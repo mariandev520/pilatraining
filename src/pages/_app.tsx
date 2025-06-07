@@ -2,6 +2,7 @@ import { useRouter } from 'next/router';
 import type { AppProps } from 'next/app';
 import Sidebar from './sidebar';
 import { useEffect } from 'react';
+import '../styles/globals.css';
 
 function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter();

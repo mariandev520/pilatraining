@@ -1,0 +1,145 @@
+/* /pages/login/Login.module.css */
+
+
+
+/* -- Estilos Generales de la Página -- */
+.pageWrapper {
+  display: flex;
+  min-height: 100vh;
+  background-color: var(--background);
+  font-family: var(--font-main);
+  position: relative;
+  overflow: hidden;
+}
+
+.leftPanel {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 48px;
+  position: relative;
+}
+
+.rightPanel {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+  z-index: 2;
+}
+
+
+
+
+/* -- Formulario de Login -- */
+.loginFormPaper {
+  padding: 40px;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 450px;
+  background: var(--form-bg);
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(150, 203, 222, 0.3);
+  position: relative;
+  z-index: 1;
+  transition: box-shadow 0.3s ease;
+}
+.loginFormPaper:hover {
+  box-shadow: 0 8px 25px rgba(150, 203, 222, 0.2);
+}
+
+.formTitle {
+  color: var(--primary);
+  font-weight: 600;
+  margin-bottom: 25px;
+  font-family: var(--font-display);
+  letter-spacing: 0.02em;
+  text-align: center;
+  position: relative;
+}
+.formTitle::after {
+  content: '';
+  display: block;
+  width: 50px;
+  height: 3px;
+  background: linear-gradient(to right, var(--primary-dark), var(--accent));
+  margin: 12px auto 0;
+  border-radius: 2px;
+}
+
+.formSubtitle {
+  color: var(--text-light);
+  margin-bottom: 25px;
+  font-weight: 400;
+  text-align: center;
+}
+
+.loginButton {
+  margin-top: 8px;
+  margin-bottom: 16px;
+  padding: 12px;
+  border-radius: 8px;
+  background: linear-gradient(to right, var(--primary-dark), var(--primary));
+  font-size: 1rem;
+  font-weight: 600;
+  text-transform: none;
+  font-family: var(--font-main);
+  color: var(--white);
+}
+.loginButton:hover {
+  background: linear-gradient(to right, var(--primary), var(--accent));
+  box-shadow: 0 4px 10px rgba(150, 203, 222, 0.3);
+}
+
+.formLink {
+  color: var(--primary);
+  font-weight: 600;
+  cursor: pointer;
+  margin-left: 5px;
+  transition: color 0.2s;
+}
+.formLink:hover {
+  color: var(--accent);
+}
+
+/* -- Clases para el componente Alert de MUI -- */
+.errorAlert {
+  margin-bottom: 24px;
+  border-radius: 8px;
+  font-family: var(--font-main);
+  background: rgba(244, 123, 123, 0.1);
+  border: 1px solid rgba(244, 123, 123, 0.2);
+  color: var(--error-text);
+  font-weight: 500;
+}
+
+/* -- Clases para los TextField de MUI -- */
+.textField .MuiOutlinedInput-root {
+  border-radius: 8px;
+}
+.textField .MuiOutlinedInput-root fieldset {
+  border-color: rgba(146, 217, 185, 0.4);
+  border-width: 1.5px;
+}
+.textField .MuiOutlinedInput-root:hover fieldset {
+  border-color: rgba(146, 217, 185, 0.6);
+}
+.textField .MuiOutlinedInput-root.Mui-focused fieldset {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(146, 217, 185, 0.2);
+}
+
+/* --- Animaciones --- */
+.spinningIcon {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
