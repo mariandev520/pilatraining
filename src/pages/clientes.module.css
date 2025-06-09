@@ -1,0 +1,101 @@
+/* src/pages/clientes.module.css */
+.pageContainer {
+  padding-top: 24px;
+  padding-bottom: 24px;
+  background-color: #f5f7fa;
+  min-height: 100vh;
+}
+
+.header {
+  margin-bottom: 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.headerTitle {
+  font-weight: 700 !important;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.formPaper {
+  padding: 24px;
+  margin-bottom: 32px;
+  border-radius: 12px !important;
+}
+
+.pilatesDetailsSection {
+  margin-top: 8px !important;
+}
+
+.pilatesDetailsPaper {
+  padding: 24px;
+  border: 1px solid #7792cb; /* primary.light */
+  background-color: rgba(74, 107, 175, 0.05);
+  border-radius: 8px;
+}
+
+.diasVisitaContainer {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.formActions {
+  margin-top: 16px;
+  text-align: right;
+}
+
+.searchField {
+  margin-bottom: 24px !important;
+}
+
+.tableContainer {
+  border-radius: 12px !important;
+  overflow-x: auto;
+}
+.tableContainer::-webkit-scrollbar {
+  height: 8px;
+}
+.tableContainer::-webkit-scrollbar-thumb {
+  background-color: #4a6baf; /* primary.main */
+  border-radius: 4px;
+}
+
+.tableHeader {
+  background-color: #4a6baf; /* primary.main */
+}
+
+.tableHeaderCell {
+  color: white !important;
+  font-weight: bold !important;
+}
+
+.tableRowOdd {
+  background-color: #f5f5f5; /* action.hover */
+}
+
+.tableCellVencido {
+  color: #d32f2f !important; /* error.main */
+}
+
+.tableCellIcon {
+  margin-right: 8px;
+  color: rgba(0, 0, 0, 0.54); /* action.active */
+}
+
+.actionButton {
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.editButton:hover {
+  background-color: #7792cb !important; /* primary.light */
+  color: white !important;
+}
+
+.deleteButton:hover {
+  background-color: #ef9a9a !important; /* error.light */
+  color: white !important;
+}
