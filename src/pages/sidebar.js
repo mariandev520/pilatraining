@@ -369,7 +369,7 @@ const Sidebar = ({ children }) => {
                     </Box>
                     <Typography variant="caption" sx={{ fontSize: '0.65rem', color: '#757575', opacity: 0.9, fontFamily: '"Roboto", sans-serif', letterSpacing: '0.5px', ml: '20px', // Ajustar alineación
                      mt: '-2px', lineHeight: 1 }}>
-                       Evolution
+                      Training
                     </Typography>
                 </LogoContainer>
              )}
