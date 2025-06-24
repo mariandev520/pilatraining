@@ -39,7 +39,7 @@
     font-weight: 700;
     color: var(--jumping-text-primary);
     background: linear-gradient(135deg, var(--jumping-primary) 0%, var(--jumping-secondary) 100%);
-    -webkit-background-clip: text;
+    /* -webkit-background-clip: text; */
     -webkit-text-fill-color: transparent;
     animation: fadeIn 0.6s ease-out;
 }
