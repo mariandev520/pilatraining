@@ -1,0 +1,208 @@
+/* src/components/jumping/jumping.module.css */
+
+/* -- Paleta de Colores y Animaciones -- */
+:root {
+    --jumping-primary: #5D5FEF;
+    --jumping-secondary: #6C63FF;
+    --jumping-success: #4CAF50;
+    --jumping-warning: #FF9800;
+    --jumping-error: #F44336;
+    --jumping-info: #2196F3;
+    --jumping-background: #F8FAFC;
+    --jumping-text-primary: #2D3748;
+    --jumping-text-secondary: #718096;
+    --jumping-light-gray: #EDF2F7;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- Estilos Generales de la Página --- */
+.pageHeader {
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.pageTitle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    font-weight: 700;
+    color: var(--jumping-text-primary);
+    background: linear-gradient(135deg, var(--jumping-primary) 0%, var(--jumping-secondary) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: fadeIn 0.6s ease-out;
+}
+
+.pageSubtitle {
+    max-width: 700px;
+    margin: 0 auto;
+    color: var(--jumping-text-secondary);
+    font-size: 1.1rem;
+}
+
+/* --- Lista de Clientes (Panel Izquierdo) --- */
+.clientListPaper {
+    padding: 1rem;
+    border-radius: 12px;
+    height: 100%;
+    position: sticky;
+    top: 20px;
+    display: flex;
+    flex-direction: column;
+    background-color: #fff;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    border: 1px solid var(--jumping-light-gray);
+}
+
+.clientListHeader {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--jumping-light-gray);
+    color: var(--jumping-text-primary);
+    font-weight: 600;
+}
+
+.clientListChip {
+    margin-left: auto;
+    background-color: rgba(93, 95, 239, 0.1);
+    color: var(--jumping-primary);
+    font-weight: 600;
+}
+
+.clientListContainer {
+    flex-grow: 1;
+    overflow-y: auto;
+    max-height: calc(100vh - 300px);
+}
+
+.clientListItem:hover {
+    transform: translateX(2px);
+}
+
+.clientListActions {
+    margin-top: auto;
+    padding-top: 1rem;
+}
+
+.saveButton {
+    height: 42px;
+    border-radius: 8px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(93, 95, 239, 0.3);
+}
+
+.saveButton:hover {
+    box-shadow: 0 4px 12px rgba(93, 95, 239, 0.4);
+    transform: translateY(-1px);
+}
+
+.unsavedChangesText {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 0.5rem;
+    color: var(--jumping-warning);
+    font-weight: 500;
+}
+
+/* --- Grilla de Horarios y Camas (Panel Derecho) --- */
+.gridPaper {
+    border-radius: 12px;
+    overflow: hidden;
+    background-color: #fff;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    border: 1px solid var(--jumping-light-gray);
+}
+
+.scheduleHeader {
+    background-color: var(--jumping-primary);
+    background: linear-gradient(135deg, var(--jumping-primary) 0%, var(--jumping-secondary) 100%);
+    color: #fff;
+    padding: 0.5rem 1rem;
+    border-radius: 8px 8px 0 0;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.scheduleGrid {
+    margin-top: 0;
+    padding: 1rem;
+    background-color: #fff;
+    border-radius: 0 0 8px 8px;
+    border: 1px solid var(--jumping-light-gray);
+    border-top: none;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+/* --- Cama Individual --- */
+.camaCard {
+    height: 160px;
+    display: flex;
+    flex-direction: column;
+    border-radius: 12px;
+    position: relative;
+    overflow: visible;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.camaCard:hover {
+    box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+    transform: translateY(-2px);
+}
+
+.camaNumber {
+    position: absolute; 
+    top: -15px; 
+    left: 15px;
+    color: #fff; 
+    width: 32px; 
+    height: 32px;
+    border-radius: 50%; 
+    display: flex; 
+    align-items: center;
+    justify-content: center; 
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    font-weight: bold; 
+    z-index: 1;
+    transition: all 0.3s ease;
+}
+
+.camaContent {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 28px 10px 8px;
+    cursor: pointer;
+}
+
+.camaAvatar:hover {
+    animation: pulse 1s ease infinite;
+}
+
+.deleteButton {
+    background-color: rgba(244, 67, 54, 0.1);
+    transition: all 0.2s ease;
+}
+
+.deleteButton:hover {
+    background-color: rgba(244, 67, 54, 0.2);
+    transform: scale(1.1);
+}
