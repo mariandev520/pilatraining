@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
-import Sidebar from './sidebar';
+import Sidebar from '../components/layout';
 import '../styles/globals.css';
 
 import { ThemeProvider, createTheme } from '@mui/material/styles';
