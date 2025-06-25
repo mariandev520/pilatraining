@@ -7,7 +7,7 @@ import { motion } from 'framer-motion';
 // Importaciones del sistema de layout
 import { StyledAppBar, StyledDrawer, MainContent } from './Sidebar.styled';
 import SidebarMenu from './SidebarMenu';
-// Importa también SidebarHeader, SidebarFooter, MobileAppBar si los creas
+import { menuItems } from './menuItems';
 
 export default function Sidebar({ children }) {
   const router = useRouter();

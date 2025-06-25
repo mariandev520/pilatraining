@@ -1,0 +1,90 @@
+/* src/components/profesor/profesor.module.css */
+
+.pageContainer {
+  padding: 2rem 1.5rem;
+  background-color: #f4f6f8;
+  min-height: 100vh;
+}
+
+.header {
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  border-radius: 12px;
+  background-color: #ffffff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.headerTitle {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  color: #15599a;
+  font-weight: 700 !important;
+}
+
+.formCard {
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  border-radius: 12px;
+  background-color: #ffffff;
+}
+
+.weekSelector {
+  padding: 1rem 1.5rem;
+  margin-bottom: 1.5rem;
+  border-radius: 12px;
+  background-color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.weekSelectorTitle {
+  color: #15599a;
+  text-align: center;
+}
+
+.attendanceTableContainer {
+  border-radius: 12px;
+  overflow: hidden; /* Clave para que el borde redondeado se aplique a la tabla */
+  border: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.tableHeader {
+  background-color: #e3f2fd; /* Un azul muy claro */
+}
+
+.tableHeaderCell {
+  font-weight: 700 !important;
+  color: #0d47a1 !important;
+  border-bottom: 2px solid #90caf9 !important;
+}
+
+.stickyColumn {
+  position: sticky;
+  left: 0;
+  background-color: #ffffff;
+  z-index: 10;
+  border-right: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.rowHover:hover {
+  background-color: rgba(25, 118, 210, 0.04) !important;
+}
+
+.dialogTitle {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: #15599a;
+  font-weight: 600;
+}
+
+.dialogActions {
+  padding: 1rem 1.5rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
+}
