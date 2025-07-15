@@ -24,16 +24,16 @@ import { motion, AnimatePresence } from 'framer-motion';
 // Paleta de colores (asumida)
 const COLORS = {
   backgroundDefault: '#121212',
-  backgroundPaper: '#1E1E1E',
+  backgroundPaper: '#FFFFF',
   backgroundSubtle: '#2C2C2C',
-  textPrimary: '#EAEAEA',
-  textSecondary: '#B0B0B0',
+  textPrimary: '#000000',
+  textSecondary: '#000000',
   accentGreen: '#00E676',
   accentGreenHover: '#00C764',
   divider: 'rgba(224, 224, 224, 0.12)',
   errorLight: '#FF8A80',
   errorMain: '#FF5252',
-  greyInactive: '#757575',
+  greyInactive: '#000000',
   white: '#FFFFFF',
 };
 
